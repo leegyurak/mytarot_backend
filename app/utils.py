@@ -11,7 +11,7 @@ class AnthropicProcessor:
             api_key=os.environ['CLAUDE_API_KEY'],
         )
 
-    def get_answer_of_claude(self, prompt: str) -> str:
+    async def get_answer_of_claude(self, prompt: str) -> str:
         message: Message = self.client.messages.create(
             model="claude-3-5-sonnet-20240620",
             max_tokens=1000,

@@ -36,7 +36,7 @@ class TarotService:
             "이 카드를 가진 당신은 (카드의 좋은 의미들) 와 같은 특징을 가지고 있어 (카드의 좋은 의미들을 추상적으로 문장화) 하지만"
             "(카드의 나쁜 의미들) 와 같은 특징도 가지고 있기 때문에 (카드의 나쁜 의미들을 추상적으로 문장화) 하는 점을 (조심 해야겠습니다, 주의 해야겠습니다 둘 중 하나 선택)"
         )
-        commentary: str = AnthropicProcessor().get_answer_of_claude(prompt=prompt)
+        commentary: str = await AnthropicProcessor().get_answer_of_claude(prompt=prompt)
         return BirthDateTarotResponseDto(
             name=tarot.name,
             img_url=tarot.img_url,
