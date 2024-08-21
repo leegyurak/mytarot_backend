@@ -1,14 +1,14 @@
  
 <h1 align="center">
   <br>
-  <a href="https://joatss.devgyurak.com/"><img src="https://joatss.devgyurak.com/static/media/%EC%A2%8B%EC%95%98%EC%93%B0-%EB%B0%88.2cc9bf1cf644a30b163f.png" alt="좋았쓰! 변환기" width="200"></a>
+  <a href="https://mytarot.devgyurak.com/"><img src="https://imagedelivery.net/R9FsTLXBX6-6fZLUqzGBBg/dfc4a526-b8e2-4064-aa4d-f97d20c2ae00/public" alt="상징 타로 찾기" width="200"></a>
   <br>
-  좋았쓰! 변환기 (BE)
+  상징 타로 찾기 (BE)
   <br>
 </h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white" alt="Django">
+  <img src="https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi" alt="FastAPI">
   <img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python" alt="Python">
   <img src="https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql" alt="MySQL">
   <img src="https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker" alt="Docker">
