@@ -1,5 +1,6 @@
 import json
 import os
+from functools import lru_cache
 
 from anthropic import Anthropic
 from anthropic.types import Message
@@ -11,6 +12,7 @@ class AnthropicProcessor:
             api_key=os.environ['CLAUDE_API_KEY'],
         )
 
+    @lru_cache(maxsize=32)
     async def get_answer_of_claude(self, prompt: str) -> str:
         message: Message = self.client.messages.create(
             model="claude-3-5-sonnet-20240620",
