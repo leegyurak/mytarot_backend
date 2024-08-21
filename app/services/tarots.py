@@ -27,7 +27,7 @@ class TarotService:
             raise TarotNotFoundError('해당하는 카드를 찾을 수 없습니다.')
         prompt: str = (
             "너에게 카드의 이름, 설명, 카드의 좋은 의미들, 카드의 나쁜 의미들을 제공 할거야."
-            f"1. 카드 이름: {tarot.name}"
+            f"1. 카드 이름: {tarot.name[:-2]}"
             f"2. 카드 설명: {tarot.description}"
             f"3. 카드 좋은 의미들: {', '.join(json.dumps(tarot.good_words))}"
             f"4. 카드 좋은 의미들: {', '.join(json.dumps(tarot.bad_words))}"
