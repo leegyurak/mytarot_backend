@@ -34,6 +34,6 @@ jobs:
         file: Dockerfile
         platforms: linux/amd64
         push: true
-        tags: devgyurak/joatss_backend:${{ env.GIT_TAG }}
+        tags: devgyurak/mytarot_backend:${{ env.GIT_TAG }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
