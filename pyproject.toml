@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = ""
+authors = ["이규락 <62545703+leegyurak@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.112.1"
+aiomysql = "^0.2.0"
+sqlalchemy = "^2.0.32"
+uvicorn = "^0.30.6"
+sqlalchemy-utils = "^0.41.2"
+pydantic-settings = "^2.4.0"
+anthropic = "^0.34.1"
+alembic = "^1.13.2"
+greenlet = "^3.0.3"
+cryptography = "^43.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

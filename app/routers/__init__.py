@@ -1,0 +1,1 @@
+from .tarots import tarot
