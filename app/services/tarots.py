@@ -22,7 +22,7 @@ class TarotService:
             birth_date_tarot_id = birth_date_tarot_id + int(i)
         if birth_date_tarot_id > 21:
             birth_date_tarot_id = sum([int(i) for i in str(birth_date_tarot_id)])
-        tarot: Tarot | None= await self._repository.get_tarot_by_tarot_id(tarot_id=birth_date_tarot_id)
+        tarot: Tarot | None = await self._repository.get_tarot_by_tarot_id(tarot_id=birth_date_tarot_id)
         if not tarot:
             raise TarotNotFoundError('해당하는 카드를 찾을 수 없습니다.')
         prompt: str = (
