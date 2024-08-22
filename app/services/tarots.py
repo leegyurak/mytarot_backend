@@ -30,11 +30,11 @@ class TarotService:
             f"1. 카드 이름: {tarot.name[:-2]}"
             f"2. 카드 설명: {tarot.description}"
             f"3. 카드 좋은 의미들: {', '.join(json.dumps(tarot.good_words))}"
-            f"4. 카드 좋은 의미들: {', '.join(json.dumps(tarot.bad_words))}"
+            f"4. 카드 나쁜 의미들: {', '.join(json.dumps(tarot.bad_words))}"
             "이 정보들을 바탕으로 문장을 다음과 같은 형식으로 만들어줘"
-            "당신의 상징 카드는 (카드 이름)입니다. 이 카드는 (카드 설명을 문장으로 풀어서)."
+            "당신의 상징 카드는 (카드 이름)입니다. 이 카드는 (카드 설명을 문장으로 풀어서, 카드 각각의 요소를 해석한 내용을 포함시켜줘)."
             "이 카드를 가진 당신은 (카드의 좋은 의미들) 와 같은 특징을 가지고 있어 (카드의 좋은 의미들을 추상적으로 문장화) 하지만"
-            "(카드의 나쁜 의미들) 와 같은 특징도 가지고 있기 때문에 (카드의 나쁜 의미들을 추상적으로 문장화) 하는 점을 (조심 해야겠습니다, 주의 해야겠습니다 둘 중 하나 선택)"
+            "(카드의 나쁜 의미들) 와 같은 특징도 가지고 있기 때문에 (카드의 나쁜 의미들을 추상적으로 문장화) 하는 점을 (조심해야겠습니다, 주의 해야겠습니다 둘 중 하나 선택)"
         )
         commentary: str = await AnthropicProcessor().get_answer_of_claude(prompt=prompt)
         return BirthDateTarotResponseDto(
@@ -42,4 +42,3 @@ class TarotService:
             img_url=tarot.img_url,
             commentary=commentary
         )
-        
