@@ -18,4 +18,3 @@ class TimeStampBase(Base):
         default=lambda: datetime.now(timezone(timedelta(hours=9))),
         onupdate=lambda: datetime.now(timezone(timedelta(hours=9))),
     )
-

@@ -16,15 +16,17 @@ class TarotService:
         try:
             datetime(year=year, month=month, day=day)
         except ValueError:
-            raise InvalidDateTimeError('유효하지 않은 날짜입니다.')
+            raise InvalidDateTimeError("유효하지 않은 날짜입니다.")
         birth_date_tarot_id: int = 0
-        for i in f'{year}{month}{day}':
+        for i in f"{year}{month}{day}":
             birth_date_tarot_id = birth_date_tarot_id + int(i)
         if birth_date_tarot_id > 21:
             birth_date_tarot_id = sum([int(i) for i in str(birth_date_tarot_id)])
-        tarot: Tarot | None = await self._repository.get_tarot_by_tarot_id(tarot_id=birth_date_tarot_id)
+        tarot: Tarot | None = await self._repository.get_tarot_by_tarot_id(
+            tarot_id=birth_date_tarot_id
+        )
         if not tarot:
-            raise TarotNotFoundError('해당하는 카드를 찾을 수 없습니다.')
+            raise TarotNotFoundError("해당하는 카드를 찾을 수 없습니다.")
         prompt: str = (
             "너에게 카드의 이름, 설명, 카드의 좋은 의미들, 카드의 나쁜 의미들을 제공 할거야."
             f"1. 카드 이름: {tarot.name[:-2]}"
@@ -38,7 +40,5 @@ class TarotService:
         )
         commentary: str = await AnthropicProcessor().get_answer_of_claude(prompt=prompt)
         return BirthDateTarotResponseDto(
-            name=tarot.name,
-            img_url=tarot.img_url,
-            commentary=commentary
+            name=tarot.name, img_url=tarot.img_url, commentary=commentary
         )

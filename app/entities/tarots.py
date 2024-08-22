@@ -6,7 +6,7 @@ from app.entities.base import TimeStampBase
 
 
 class Tarot(TimeStampBase):
-    __tablename__ = 'tarots'
+    __tablename__ = "tarots"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(31), nullable=False)

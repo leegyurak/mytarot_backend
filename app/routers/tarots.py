@@ -6,7 +6,7 @@ from app.exceptions import InvalidDateTimeError, TarotNotFoundError
 from app.services import TarotService
 from configs import settings
 
-tarot: APIRouter = APIRouter(prefix=f'{settings.API_PREFIX}tarots')
+tarot: APIRouter = APIRouter(prefix=f"{settings.API_PREFIX}tarots")
 
 
 class BirthDateTarotFilter(BaseModel):
@@ -15,8 +15,10 @@ class BirthDateTarotFilter(BaseModel):
     day: int
 
 
-@tarot.get('/birth-date-tarot', tags=['tarots'])
-async def birth_date_tarot(filter: BirthDateTarotFilter = Depends()) -> BirthDateTarotResponseDto:
+@tarot.get("/birth-date-tarot", tags=["tarots"])
+async def birth_date_tarot(
+    filter: BirthDateTarotFilter = Depends(),
+) -> BirthDateTarotResponseDto:
     try:
         return await TarotService().get_birth_date_tarot(
             year=filter.year,

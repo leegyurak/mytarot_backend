@@ -9,7 +9,7 @@ from async_lru import alru_cache
 class AnthropicProcessor:
     def __init__(self) -> None:
         self.client: Anthropic = Anthropic(
-            api_key=os.environ['CLAUDE_API_KEY'],
+            api_key=os.environ["CLAUDE_API_KEY"],
         )
 
     @alru_cache(maxsize=32)
@@ -18,8 +18,6 @@ class AnthropicProcessor:
             model="claude-3-5-sonnet-20240620",
             max_tokens=1000,
             temperature=0.0,
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
+            messages=[{"role": "user", "content": prompt}],
         )
         return json.loads(message.model_dump_json())["content"][0]["text"]
