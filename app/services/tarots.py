@@ -11,23 +11,22 @@ from app.utils import AnthropicProcessor
 class TarotService:
     def __init__(self) -> None:
         self._repository: TarotRepository = TarotRepository()
-
-    async def get_birth_date_tarot(self, year: int, month: int, day: int):
+        self._processor: AnthropicProcessor = AnthropicProcessor()
+        
+    def _validate_date(self, year: int, month: int, day: int) -> None:
         try:
             datetime(year=year, month=month, day=day)
         except ValueError:
             raise InvalidDateTimeError("유효하지 않은 날짜입니다.")
-        birth_date_tarot_id: int = 0
-        for i in f"{year}{month}{day}":
-            birth_date_tarot_id = birth_date_tarot_id + int(i)
-        if birth_date_tarot_id > 21:
-            birth_date_tarot_id = sum([int(i) for i in str(birth_date_tarot_id)])
-        tarot: Tarot | None = await self._repository.get_tarot_by_tarot_id(
-            tarot_id=birth_date_tarot_id
-        )
-        if not tarot:
-            raise TarotNotFoundError("해당하는 카드를 찾을 수 없습니다.")
-        prompt: str = (
+        
+    def _calculate_tarot_id(self, year: int, month: int, day: int) -> int:
+        birth_date_tarot_id = sum(int(i) for i in f"{year}{month}{day}")
+        while birth_date_tarot_id > 21:
+            birth_date_tarot_id = sum(int(i) for i in str(birth_date_tarot_id))
+        return birth_date_tarot_id
+    
+    def _create_prompt(self, tarot: Tarot) -> str:
+        return (
             "너에게 카드의 이름, 설명, 카드의 좋은 의미들, 카드의 나쁜 의미들을 제공 할거야."
             f"1. 카드 이름: {tarot.name[:-2]}"
             f"2. 카드 설명: {tarot.description}"
@@ -38,7 +37,21 @@ class TarotService:
             "이 카드를 가진 당신은 (카드의 좋은 의미들) 와 같은 특징을 가지고 있어 (카드의 좋은 의미들을 추상적으로 문장화) 하지만"
             "(카드의 나쁜 의미들) 와 같은 특징도 가지고 있기 때문에 (카드의 나쁜 의미들을 추상적으로 문장화) 하는 점을 (조심해야겠습니다, 주의 해야겠습니다 둘 중 하나 선택)"
         )
-        commentary: str = await AnthropicProcessor().get_answer_of_claude(prompt=prompt)
+
+    async def get_birth_date_tarot(self, year: int, month: int, day: int):
+        self._validate_date(year=year, month=month, day=day)
+
+        birth_date_tarot_id: int = self._calculate_tarot_id(year=year, month=month, day=day)
+
+        tarot: Tarot | None = await self._repository.get_tarot_by_tarot_id(
+            tarot_id=birth_date_tarot_id
+        )
+        if not tarot:
+            raise TarotNotFoundError("해당하는 카드를 찾을 수 없습니다.")
+
+        prompt: str = self._create_prompt(tarot=tarot)
+        commentary: str = await self._processor.get_answer_of_claude(prompt=prompt)
+
         return BirthDateTarotResponseDto(
             name=tarot.name, img_url=tarot.img_url, commentary=commentary
         )
