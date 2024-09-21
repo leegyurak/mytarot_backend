@@ -12,19 +12,19 @@ class TarotService:
     def __init__(self) -> None:
         self._repository: TarotRepository = TarotRepository()
         self._processor: AnthropicProcessor = AnthropicProcessor()
-        
+
     def _validate_date(self, year: int, month: int, day: int) -> None:
         try:
             datetime(year=year, month=month, day=day)
         except ValueError:
             raise InvalidDateTimeError("유효하지 않은 날짜입니다.")
-        
+
     def _calculate_tarot_id(self, year: int, month: int, day: int) -> int:
         birth_date_tarot_id = sum(int(i) for i in f"{year}{month}{day}")
         while birth_date_tarot_id > 21:
             birth_date_tarot_id = sum(int(i) for i in str(birth_date_tarot_id))
         return birth_date_tarot_id
-    
+
     def _create_prompt(self, tarot: Tarot) -> str:
         return (
             "너에게 카드의 이름, 설명, 카드의 좋은 의미들, 카드의 나쁜 의미들을 제공 할거야."
@@ -41,7 +41,9 @@ class TarotService:
     async def get_birth_date_tarot(self, year: int, month: int, day: int):
         self._validate_date(year=year, month=month, day=day)
 
-        birth_date_tarot_id: int = self._calculate_tarot_id(year=year, month=month, day=day)
+        birth_date_tarot_id: int = self._calculate_tarot_id(
+            year=year, month=month, day=day
+        )
 
         tarot: Tarot | None = await self._repository.get_tarot_by_tarot_id(
             tarot_id=birth_date_tarot_id
