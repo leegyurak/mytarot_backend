@@ -8,11 +8,6 @@ class InvalidDateTimeError(Exception):
         self.message: str = message
 
 
-class InvalidKoreanNameError(Exception):
-    def __init__(self, message: str) -> None:
-        self.message: str = message
-
-
 class FailedToCreatePromptError(Exception):
     def __init__(self, message: str) -> None:
         self.message: str = message

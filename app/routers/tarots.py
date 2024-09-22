@@ -9,7 +9,6 @@ from app.dtos import (
 from app.exceptions import (
     FailedToCreatePromptError,
     InvalidDateTimeError,
-    InvalidKoreanNameError,
     TarotNotFoundError,
 )
 from configs import settings
@@ -78,7 +77,6 @@ async def birth_date_compatibility(
     except (
         FailedToCreatePromptError,
         InvalidDateTimeError,
-        InvalidKoreanNameError,
     ) as error:
         raise HTTPException(detail=error.message, status_code=400) from error
     except TarotNotFoundError as error:

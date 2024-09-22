@@ -1,8 +1,7 @@
 import pydantic
 from dependency_injector import containers, providers
-from pydantic_settings import BaseSettings
 
-from app.repositories import TarotRepository
+from app.repositories import CompatibilityTarotResultRepository, TarotRepository
 from app.services import TarotService
 from app.utils import AnthropicProcessor
 from configs import ApplicationSettings
@@ -32,8 +31,13 @@ class Container(containers.DeclarativeContainer):
         TarotRepository,
         db=db,
     )
+    compatibility_tarot_result_repository = providers.Factory(
+        CompatibilityTarotResultRepository,
+        db=db,
+    )
     tarot_service = providers.Factory(
         TarotService,
-        repository=tarot_repository,
+        tarot_repository=tarot_repository,
+        compatibility_tarot_result_repository=compatibility_tarot_result_repository,
         processor=anthropic_processor,
     )
