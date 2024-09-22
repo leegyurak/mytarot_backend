@@ -69,13 +69,19 @@ class TarotService:
         if prompt_type == "birth_date":
             return self._generate_birth_date_prompt(tarot)
         elif prompt_type == "compatibility":
+            if (
+                not kwargs.get("other_tarot")
+                or not kwargs.get("first_name")
+                or not kwargs.get("second_name")
+            ):
+                raise FailedToCreatePromptError("정보가 부족합니다.")
             return self._generate_compatibility_prompt(
                 tarot,
                 kwargs.get("other_tarot"),
                 kwargs.get("first_name"),
                 kwargs.get("second_name"),
             )
-        raise FailedToCreatePromptError("잘못된 prompt_type 또는 부족한 정보입니다.")
+        raise FailedToCreatePromptError("잘못된 prompt_type입니다.")
 
     def _generate_birth_date_prompt(self, tarot: Tarot) -> str:
         return (
