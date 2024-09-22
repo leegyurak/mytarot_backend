@@ -38,7 +38,10 @@ async def birth_date(
             month=filter.month,
             day=filter.day,
         )
-    except InvalidDateTimeError as error:
+    except (
+        FailedToCreatePromptError,
+        InvalidDateTimeError,
+    ) as error:
         raise HTTPException(detail=error.message, status_code=400) from error
     except TarotNotFoundError as error:
         raise HTTPException(detail=error.message, status_code=404) from error
