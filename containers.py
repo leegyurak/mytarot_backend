@@ -17,7 +17,6 @@ class Container(containers.DeclarativeContainer):
     )
     config = providers.Configuration()
     config.from_dict(ApplicationSettings().model_dump())
-    print(ApplicationSettings().model_dump())
 
     db = providers.Singleton(
         Database,
