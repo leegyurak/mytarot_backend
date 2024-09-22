@@ -30,7 +30,7 @@ class BirthDateFilter(BaseModel):
 @inject
 async def birth_date(
     filter: BirthDateFilter = Depends(BirthDateFilter),
-    service: TarotService = Depends(Provide[Container.tarot_service]), 
+    service: TarotService = Depends(Provide[Container.tarot_service]),
 ) -> BirthDateResponseDto:
     try:
         return await service.get_birth_date_tarot(
@@ -76,7 +76,7 @@ async def birth_date_compatibility(
         FailedToCreatePromptError,
         InvalidDateTimeError,
         InvalidKoreanNameError,
-    )as error:
+    ) as error:
         raise HTTPException(detail=error.message, status_code=400) from error
     except TarotNotFoundError as error:
         raise HTTPException(detail=error.message, status_code=404) from error

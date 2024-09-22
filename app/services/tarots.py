@@ -21,7 +21,9 @@ MAX_TAROT_ID: Final = 21
 
 
 class TarotService:
-    def __init__(self, repository: TarotRepository, processor: AnthropicProcessor) -> None:
+    def __init__(
+        self, repository: TarotRepository, processor: AnthropicProcessor
+    ) -> None:
         self._repository = repository
         self._processor = processor
 
@@ -30,19 +32,19 @@ class TarotService:
             datetime(year=year, month=month, day=day)
         except ValueError:
             raise InvalidDateTimeError("유효하지 않은 날짜입니다.")
-        
+
     def _validate_korean_name(self, name: str) -> None:
-        if not re.match(r'^[가-힣]+$', name):
-            raise InvalidKoreanNameError('올바르지 않은 한국어 이름입니다.')
+        if not re.match(r"^[가-힣]+$", name):
+            raise InvalidKoreanNameError("올바르지 않은 한국어 이름입니다.")
         if len(name) < 2 or len(name) > 4:
-            raise InvalidKoreanNameError('올바르지 않은 한국어 이름입니다.')
+            raise InvalidKoreanNameError("올바르지 않은 한국어 이름입니다.")
 
     def _calculate_tarot_id(self, year: int, month: int, day: int) -> int:
         tarot_id: int = sum(int(i) for i in f"{year}{month}{day}")
         while tarot_id > MAX_TAROT_ID:
             tarot_id = sum(int(i) for i in str(tarot_id))
         return tarot_id
-    
+
     async def _get_tarot_by_date(self, year: int, month: int, day: int) -> Tarot:
         self._validate_date(year=year, month=month, day=day)
         tarot_id: int = self._calculate_tarot_id(year=year, month=month, day=day)
@@ -51,20 +53,28 @@ class TarotService:
             raise TarotNotFoundError("해당하는 카드를 찾을 수 없습니다.")
         return tarot
 
-    async def _get_tarots(self, first_data: tuple, second_data: tuple) -> tuple[Tarot, Tarot]:
+    async def _get_tarots(
+        self, first_data: tuple, second_data: tuple
+    ) -> tuple[Tarot, Tarot]:
         first_tarot = await self._get_tarot_by_date(*first_data)
         second_tarot = await self._get_tarot_by_date(*second_data)
         return first_tarot, second_tarot
 
-    def _generate_prompt(self,
-            tarot: Tarot,
-            prompt_type: str,
-            **kwargs,
-        ) -> str:
+    def _generate_prompt(
+        self,
+        tarot: Tarot,
+        prompt_type: str,
+        **kwargs,
+    ) -> str:
         if prompt_type == "birth_date":
             return self._generate_birth_date_prompt(tarot)
         elif prompt_type == "compatibility":
-            return self._generate_compatibility_prompt(tarot, kwargs.get('other_tarot'), kwargs.get('first_name'), kwargs.get('second_name'))
+            return self._generate_compatibility_prompt(
+                tarot,
+                kwargs.get("other_tarot"),
+                kwargs.get("first_name"),
+                kwargs.get("second_name"),
+            )
         raise FailedToCreatePromptError("잘못된 prompt_type 또는 부족한 정보입니다.")
 
     def _generate_birth_date_prompt(self, tarot: Tarot) -> str:
@@ -80,7 +90,9 @@ class TarotService:
             "(카드의 나쁜 의미들) 와 같은 특징도 가지고 있기 때문에 (카드의 나쁜 의미들을 추상적으로 문장화) 하는 점을 (조심해야겠습니다, 주의 해야겠습니다 둘 중 하나 선택)"
         )
 
-    def _generate_compatibility_prompt(self, tarot: Tarot, other_tarot: Tarot, first_name: str, second_name: str) -> str:
+    def _generate_compatibility_prompt(
+        self, tarot: Tarot, other_tarot: Tarot, first_name: str, second_name: str
+    ) -> str:
         return (
             "너에게 두 사람의 이름과 두 사람을 각각 나타내는 두 카드의 이름, 설명, 카드의 좋은 의미들, 카드의 나쁜 의미들을 제공할 거야."
             f"1. 첫 번째 사람 이름: {first_name}"
@@ -101,8 +113,10 @@ class TarotService:
             "하지만 두 분은 (첫 번째 카드와 두 번째 카드의 부정적인 의미와 해석들을 조합하여 두 사람이 만났을 때의 악영향를 문장으로 설명)."
             "따라서 이러한 점을 보았을 때, 두 분의 궁합은 (카드의 의미를 바탕으로 해석한 두 사람 궁합의 퍼센트에이지, 좋을 수록 높도록)입니다."
         )
-    
-    async def get_birth_date_tarot(self, year: int, month: int, day: int) -> BirthDateResponseDto:
+
+    async def get_birth_date_tarot(
+        self, year: int, month: int, day: int
+    ) -> BirthDateResponseDto:
         tarot: Tarot = await self._get_tarot_by_date(year=year, month=month, day=day)
         prompt: str = self._generate_prompt(tarot=tarot, prompt_type="birth_date")
         commentary: str = await self._processor.get_answer_of_claude(prompt=prompt)
@@ -113,21 +127,33 @@ class TarotService:
         )
 
     async def get_birth_date_compatibility_tarot(
-        self, 
-        first_name: str, first_year: int, first_month: int, first_day: int, 
-        second_name: str, second_year: int, second_month: int, second_day: int,
+        self,
+        first_name: str,
+        first_year: int,
+        first_month: int,
+        first_day: int,
+        second_name: str,
+        second_year: int,
+        second_month: int,
+        second_day: int,
     ) -> BirthDateCompatibilityResponseDto:
         self._validate_korean_name(first_name)
         self._validate_korean_name(second_name)
         first_tarot, second_tarot = await self._get_tarots(
             (first_year, first_month, first_day),
-            (second_year, second_month, second_day)
+            (second_year, second_month, second_day),
         )
-        prompt = self._generate_prompt(tarot=first_tarot, first_name=first_name, second_name=second_name, other_tarot=second_tarot, prompt_type="compatibility")
+        prompt = self._generate_prompt(
+            tarot=first_tarot,
+            first_name=first_name,
+            second_name=second_name,
+            other_tarot=second_tarot,
+            prompt_type="compatibility",
+        )
         commentary = await self._processor.get_answer_of_claude(prompt=prompt)
 
         return BirthDateCompatibilityResponseDto(
-            first_man={'name': first_tarot.name, 'img_url': first_tarot.img_url},
-            second_man={'name': second_tarot.name, 'img_url': second_tarot.img_url},
+            first_man={"name": first_tarot.name, "img_url": first_tarot.img_url},
+            second_man={"name": second_tarot.name, "img_url": second_tarot.img_url},
             commentary=commentary,
         )
