@@ -9,9 +9,12 @@ from app.utils import AnthropicProcessor
 
 
 class TarotService:
-    def __init__(self) -> None:
-        self._repository: TarotRepository = TarotRepository()
-        self._processor: AnthropicProcessor = AnthropicProcessor()
+    def __init__(self,
+        repository: TarotRepository,
+        processor: AnthropicProcessor,
+    ) -> None:
+        self._repository: TarotRepository = repository
+        self._processor: AnthropicProcessor = processor
 
     def _validate_date(self, year: int, month: int, day: int) -> None:
         try:
@@ -20,7 +23,7 @@ class TarotService:
             raise InvalidDateTimeError("유효하지 않은 날짜입니다.")
 
     def _calculate_tarot_id(self, year: int, month: int, day: int) -> int:
-        birth_date_tarot_id = sum(int(i) for i in f"{year}{month}{day}")
+        birth_date_tarot_id: int = sum(int(i) for i in f"{year}{month}{day}")
         while birth_date_tarot_id > 21:
             birth_date_tarot_id = sum(int(i) for i in str(birth_date_tarot_id))
         return birth_date_tarot_id

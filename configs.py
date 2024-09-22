@@ -1,4 +1,5 @@
 import os
+from typing import Any
 
 from pydantic_settings import BaseSettings
 
@@ -29,6 +30,11 @@ class ApplicationSettings(BaseSettings):
 
     class Config:
         extra = 'allow'
+        
+    def model_dump(self):
+        model_dumped_dict: dict[str, Any] = super().model_dump()
+        model_dumped_dict['db']['url'] = self.db.url
+        return model_dumped_dict
 
 
 settings: ApplicationSettings = ApplicationSettings()

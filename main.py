@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from app.routers import tarot
+from containers import Container
 
 
 app: FastAPI = FastAPI()
@@ -15,6 +16,7 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*'],
 )
+app.container = Container()
 
 @app.get('/')
 async def healthcheck():

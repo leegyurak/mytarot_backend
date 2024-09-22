@@ -1,10 +1,13 @@
+from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
 from app.dtos import BirthDateTarotResponseDto
 from app.exceptions import InvalidDateTimeError, TarotNotFoundError
-from app.services import TarotService
 from configs import settings
+from containers import Container
+
+from ..services import TarotService
 
 tarot: APIRouter = APIRouter(prefix=f"{settings.API_PREFIX}tarots")
 
@@ -16,11 +19,13 @@ class BirthDateTarotFilter(BaseModel):
 
 
 @tarot.get("/birth-date-tarot", tags=["tarots"])
+@inject
 async def birth_date_tarot(
-    filter: BirthDateTarotFilter = Depends(),
+    filter: BirthDateTarotFilter = Depends(BirthDateTarotFilter),
+    service: TarotService = Depends(Provide[Container.tarot_service]), 
 ) -> BirthDateTarotResponseDto:
     try:
-        return await TarotService().get_birth_date_tarot(
+        return await service.get_birth_date_tarot(
             year=filter.year,
             month=filter.month,
             day=filter.day,

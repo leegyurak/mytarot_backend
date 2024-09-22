@@ -4,12 +4,13 @@ import os
 from anthropic import Anthropic
 from anthropic.types import Message
 from async_lru import alru_cache
+from dependency_injector.wiring import Provide
 
 
 class AnthropicProcessor:
-    def __init__(self) -> None:
+    def __init__(self, api_key: str) -> None:
         self.client: Anthropic = Anthropic(
-            api_key=os.environ["CLAUDE_API_KEY"],
+            api_key=api_key,
         )
 
     @alru_cache(maxsize=32)
