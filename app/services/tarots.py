@@ -149,14 +149,14 @@ class TarotService:
             (first_year, first_month, first_day),
             (second_year, second_month, second_day),
         )
-        prompt = self._generate_prompt(
+        prompt: str = self._generate_prompt(
             tarot=first_tarot,
             first_name=first_name,
             second_name=second_name,
             other_tarot=second_tarot,
             prompt_type="compatibility",
         )
-        commentary = await self._processor.get_answer_of_claude(prompt=prompt)
+        commentary: str = await self._processor.get_answer_of_claude(prompt=prompt)
 
         return BirthDateCompatibilityResponseDto(
             first_man={"name": first_tarot.name, "img_url": first_tarot.img_url},
