@@ -123,6 +123,8 @@ class TarotService:
         )
         
     def _masking_name_in_commentary(self, commentary: str, first_name: str, second_name: str) -> str:
+        if len(second_name) > len(first_name):
+            return commentary.replace(second_name, '???').replace(first_name, '***')
         return commentary.replace(first_name, '***').replace(second_name, '???')
     
     def _unmasking_name_in_commentary(self, commentary: str, first_name: str, second_name: str) -> str:
