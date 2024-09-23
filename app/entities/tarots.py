@@ -15,13 +15,11 @@ class Tarot(TimeStampBase):
     bad_words: Mapped[str] = mapped_column(String(255), nullable=False)
     tarot_id: Mapped[int] = mapped_column(Integer, nullable=False, unique=True)
     img_url: Mapped[URLType] = mapped_column(URLType, nullable=False)
-    
-    
+
+
 class CompatibilityTarotResult(TimeStampBase):
     __tablename__ = "compatibility_tarot_results"
-    __table_args__ = (
-        UniqueConstraint("first_tarot_id", "second_tarot_id"),
-    )
+    __table_args__ = (UniqueConstraint("first_tarot_id", "second_tarot_id"),)
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     first_tarot_id: Mapped[int] = mapped_column(Integer, nullable=False)
