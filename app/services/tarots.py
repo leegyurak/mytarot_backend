@@ -133,15 +133,6 @@ class TarotService:
         if len(second_name) > len(first_name):
             commentary = commentary.replace(second_name, "???")
             commentary = commentary.replace(first_name, "***")
-        elif first_name == second_name:
-            total_count: int = max(
-                commentary.count(first_name), commentary.count(second_name)
-            )
-            replacements: list[str] = ["***", "???"] * (total_count + 1)
-            commentary = re.compile(
-                re.escape(first_name),
-                re.IGNORECASE,
-            ).sub(lambda x: replacements.pop(0), commentary)
         else:
             commentary = commentary.replace(first_name, "***")
             commentary = commentary.replace(second_name, "???")
@@ -164,17 +155,18 @@ class TarotService:
             prompt_type="compatibility",
         )
         commentary: str = await self._processor.get_answer_of_claude(prompt=prompt)
-        commentary = self._masking_name_in_commentary(
-            commentary=commentary,
-            first_name=first_name,
-            second_name=second_name,
-        )
+        if first_name != second_name:
+            commentary = self._masking_name_in_commentary(
+                commentary=commentary,
+                first_name=first_name,
+                second_name=second_name,
+            )
 
-        await self._compatibility_tarot_result_repository.create_compatibility_tarot_result(
-            first_tarot_id=first_tarot.id,
-            second_tarot_id=second_tarot.id,
-            commentary=commentary,
-        )
+            await self._compatibility_tarot_result_repository.create_compatibility_tarot_result(
+                first_tarot_id=first_tarot.id,
+                second_tarot_id=second_tarot.id,
+                commentary=commentary,
+            )
         return commentary
 
     def _create_compatibility_response(
