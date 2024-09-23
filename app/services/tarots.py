@@ -134,7 +134,10 @@ class TarotService:
             commentary = commentary.replace(second_name, "???")
             commentary = commentary.replace(first_name, "***")
         elif first_name == second_name:
-            replacements: list[str] = ["***", "???"]
+            total_count: int = max(
+                commentary.count(first_name), commentary.count(second_name)
+            )
+            replacements: list[str] = ["***", "???"] * (total_count + 1)
             commentary = re.compile(
                 re.escape(first_name),
                 re.IGNORECASE,
