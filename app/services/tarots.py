@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import datetime
 from typing import Final
 
@@ -130,8 +131,19 @@ class TarotService:
         self, commentary: str, first_name: str, second_name: str
     ) -> str:
         if len(second_name) > len(first_name):
-            return commentary.replace(second_name, "???").replace(first_name, "***")
-        return commentary.replace(first_name, "***").replace(second_name, "???")
+            commentary = commentary.replace(second_name, "???")
+            commentary = commentary.replace(first_name, "***")
+        elif first_name == second_name:
+            replacements: list[str] = ["***", "???"]
+            commentary = re.compile(
+                re.escape(first_name),
+                re.IGNORECASE,
+            ).sub(lambda x: replacements.pop(0), commentary)
+        else:
+            commentary = commentary.replace(first_name, "***")
+            commentary = commentary.replace(second_name, "???")
+
+        return commentary
 
     def _unmasking_name_in_commentary(
         self, commentary: str, first_name: str, second_name: str
